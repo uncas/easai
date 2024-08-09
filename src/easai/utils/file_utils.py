@@ -1,17 +1,17 @@
 def write_text(folder : str, file : str, text : str):
-	writeOrAppendText(folder, file, text, "w")
+	write_or_append_text(folder, file, text, "w")
 
-def appendText(folder, file, text):
-	writeOrAppendText(folder, file, text, "a")
+def append_text(folder, file, text):
+	write_or_append_text(folder, file, text, "a")
 
-def writeOrAppendText(folder, file, text, mode):
+def write_or_append_text(folder, file, text, mode):
 	from pathlib import Path
 	Path(folder).mkdir(parents = True, exist_ok = True)
 	f = open(folder + "/" + file, mode)
 	f.write(text)
 	f.close()
 
-def getFilePath(pathRelativeToSourceFolder):
+def get_file_path(pathRelativeToSourceFolder):
 	import os
 	thisPath = os.path.realpath(__file__)
 	sourcePath = os.path.join(os.path.dirname(thisPath), "..")
