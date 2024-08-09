@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "easai"
-version = "0.0.3"
+version = "0.0.4"
 authors = [
   { name="Ole Lynge Sørensen", email="olelynge@gmail.com" },
 ]
