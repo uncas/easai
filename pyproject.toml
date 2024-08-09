@@ -1,0 +1,22 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "easai"
+version = "0.0.1"
+authors = [
+  { name="Ole Lynge Sørensen", email="olelynge@gmail.com" },
+]
+description = "Tools to assist and automate."
+readme = "README.md"
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+[project.urls]
+Homepage = "https://github.com/uncas/easai"
+Issues = "https://github.com/uncas/easai/issues"
