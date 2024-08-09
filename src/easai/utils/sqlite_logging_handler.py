@@ -49,3 +49,7 @@ class SQLiteLoggingHandler(logging.Handler):
 				conn.commit()  # not efficient, but hopefully thread-safe
 		except Exception as e:
 			print("Error in logging:", e)
+	
+	def get_last_message(self):
+		with sqlite3.connect(self.db) as conn:
+			return conn.execute("SELECT Message FROM log ORDER BY TimeStamp DESC LIMIT 1;").fetchone()
