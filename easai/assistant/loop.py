@@ -6,39 +6,45 @@ from openai import OpenAI
 from easai.assistant.tool import AssistantTool
 from easai.assistant.log import AiLogBase, LoggingAiLog
 
-def run_tool_loop(
-		client: OpenAI,
-		messages: list,
-		model: str,
-		tools: list[AssistantTool] = [],
-		max_iterations: int = 10,
+class AssistantLoop:
+	def __init__(self, client: OpenAI = None, model: str = "gpt-4o-mini", 
+			  system_prompt: str = "You are a helpful assistant.",
+			  tools: list[AssistantTool] = [], max_iterations: int = 10):
+		self.client: OpenAI = client if client is not None else OpenAI()
+		self.model: str = model
+		self.system_prompt: str = system_prompt
+		self.tools: list[AssistantTool] = tools
+		self.max_iterations: int = max_iterations
+
+def run_assistant_loop(
+		messages: list = [],
+		assistant_loop: AssistantLoop = None,
 		assistant_message_callback = None,
 		tool_message_callback = None,
 		ai_logger: AiLogBase = LoggingAiLog()) -> list:
 	"""Run assistant tool loop, calling tools until the assistant is satisfied.
 
 	Args:
-		client (OpenAI): OpenAI client
-		tools (list): List of tools
+		assistant_loop (AssistantLoop): Assistant loop
 		messages (list): List of messages
-		model (str): LLM model
-		max_iterations (int, optional): Maximum number of iterations. Defaults to 10.
 		assistant_message_callback (function, optional): Function to call when the assistant message is received. Defaults to None.
 	"""
-	client_tools = [tool.map_to_open_ai_tool() for tool in tools]
-	tool_methods = {tool.name: tool.method for tool in tools}
+	assistant_loop = assistant_loop if assistant_loop is not None else AssistantLoop()
+	client_tools = [tool.map_to_open_ai_tool() for tool in assistant_loop.tools]
+	tool_methods = {tool.name: tool.method for tool in assistant_loop.tools}
+	messages.insert(0, get_system_prompt(assistant_loop.system_prompt))
 	message_count_at_last_log = len(messages) - 1
-	for _ in range(max_iterations):
-		chat_completion = client.chat.completions.create(
+	for _ in range(assistant_loop.max_iterations):
+		chat_completion = assistant_loop.client.chat.completions.create(
 			messages = messages,
-			model = model,
+			model = assistant_loop.model,
 			tools = client_tools if len(client_tools) > 0 else None
 		)
 		choice = chat_completion.choices[0]
 		finish_reason = choice.finish_reason
 		message = choice.message
 		messages.append(message)
-		ai_logger.log(model, chat_completion.usage.prompt_tokens, chat_completion.usage.completion_tokens, messages[message_count_at_last_log:])
+		ai_logger.log(assistant_loop.model, chat_completion.usage.prompt_tokens, chat_completion.usage.completion_tokens, messages[message_count_at_last_log:])
 		message_count_at_last_log = len(messages)
 		if finish_reason == "stop":
 			if assistant_message_callback:

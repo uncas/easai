@@ -1,18 +1,13 @@
-from openai import OpenAI
-
 from easai.assistant.log import AiLogBase, LoggingAiLog
-from easai.assistant.loop import run_tool_loop, get_system_prompt, get_user_prompt
-from easai.assistant.tool import AssistantTool
+from easai.assistant.loop import AssistantLoop, run_assistant_loop, get_system_prompt, get_user_prompt
 from easai.utils.console_formatting import background, foreground, style
 
 def run_chat_console(
-		client: OpenAI,
-		model: str = "gpt-4o-mini",
-		system_prompt: str = "You are a helpful assistant.",
+		assistant_loop: AssistantLoop = None,
 		your_name: str = "You",
-		tools: list[AssistantTool] = [],
 		ai_logger: AiLogBase = LoggingAiLog()):
-	messages = [get_system_prompt(system_prompt)]
+	assistant_loop = assistant_loop if assistant_loop is not None else AssistantLoop()
+	messages = [get_system_prompt(assistant_loop.system_prompt)]
 	print_assistant_message("Hello! How can I help you?")
 	while True:
 		prompt = input(background.BLUE + foreground.WHITE + get_role_console_line(your_name) + " ")
@@ -21,12 +16,9 @@ def run_chat_console(
 			print_assistant_message("Good bye!", skip_bye_info = True)
 			return
 		messages.append(get_user_prompt(prompt))
-		messages = run_tool_loop(
-			client = client,
-			tools = tools,
+		messages = run_assistant_loop(
+			assistant_loop = assistant_loop,
 			messages = messages,
-			model = model,
-			max_iterations = 10,
 			assistant_message_callback = print_assistant_message,
 			tool_message_callback = print_tool_message,
 			ai_logger = ai_logger)
