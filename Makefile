@@ -21,6 +21,6 @@ package: test-all
 
 upload: venv
 	. .venv/bin/activate
-	.venv/bin/python -m twine upload dist/easai-0.0.5*.*
+	.venv/bin/python -m twine upload dist/easai-0.0.6*.*
 
 publish: package upload
