@@ -33,3 +33,17 @@ class AssistantUnitTests(unittest.TestCase):
 		
 		self.assertIn("sunny", result[-1].content)
 		self.assertTrue(self.tool_called)
+
+	def test_run_tool_loop_without_tools(self):
+		from dotenv import load_dotenv
+		load_dotenv(override = True)
+		messages = [get_system_prompt("You are a helpful assistant.")]
+		messages.append(get_user_prompt("Explain the sun"))
+		client = OpenAI()
+		
+		result = run_tool_loop(
+			client = client,
+			messages = messages,
+			model = "gpt-4o-mini")
+		
+		self.assertIn("sun", result[-1].content)

@@ -8,9 +8,9 @@ from easai.assistant.log import AiLogBase, LoggingAiLog
 
 def run_tool_loop(
 		client: OpenAI,
-		tools: list[AssistantTool],
 		messages: list,
 		model: str,
+		tools: list[AssistantTool] = [],
 		max_iterations: int = 10,
 		assistant_message_callback = None,
 		tool_message_callback = None,
@@ -32,7 +32,7 @@ def run_tool_loop(
 		chat_completion = client.chat.completions.create(
 			messages = messages,
 			model = model,
-			tools = client_tools
+			tools = client_tools if len(client_tools) > 0 else None
 		)
 		choice = chat_completion.choices[0]
 		finish_reason = choice.finish_reason
