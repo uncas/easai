@@ -55,7 +55,7 @@ def run_tool_loop(
 					if function_args:
 						if tool_message_callback:
 							tool_message_callback("Calling function " + function_name + " with " + str(function_args))
-						function_response = tool_method(function_args)
+						function_response = tool_method(**function_args)
 					else:
 						if tool_message_callback:
 							tool_message_callback("Calling function " + function_name)

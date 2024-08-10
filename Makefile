@@ -9,7 +9,7 @@ venv: .venv/touchfile
 
 test: venv
 	. .venv/bin/activate
-	.venv/bin/python -m unittest discover -s easai_tests -p *_integrationtests.py
+	.venv/bin/python -m unittest discover -s easai_tests -p *_unittests.py
 
 test-all: venv
 	. .venv/bin/activate
