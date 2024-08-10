@@ -17,6 +17,6 @@ package: venv
 
 upload: venv
 	. .venv/bin/activate
-	.venv/bin/python -m twine upload dist/easai-0.0.4*
+	.venv/bin/python -m twine upload dist/easai-0.0.5*.*
 
 publish: package upload
