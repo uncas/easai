@@ -2,9 +2,9 @@ import datetime
 import logging
 import unittest
 
-from src.easai.utils.sqlite_logging_handler import SQLiteLoggingHandler
+from easai.utils.sqlite_logging_handler import SQLiteLoggingHandler
 
-class AssistantUnitTests(unittest.TestCase):
+class SQLiteLoggingHandlerTests(unittest.TestCase):
 	def test_logger(self):
 		sqlite_handler = SQLiteLoggingHandler(db = "output/log.db")
 		sqlite_handler.setLevel(logging.DEBUG)

@@ -1,2 +1,9 @@
+# for lib (easai folder):
+openai
+
+# for tests (easai_tests folder):
+python-dotenv
+
+# for build:
 build
 twine

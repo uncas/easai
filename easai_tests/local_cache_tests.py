@@ -1,11 +1,12 @@
+import time
 import unittest
+import uuid
 
-from src.easai.utils.local_cache import LocalCache
+from easai.utils.local_cache import LocalCache
 
-class AssistantUnitTests(unittest.TestCase):
+class LocalCacheTests(unittest.TestCase):
 
 	def test_getOrAdd(self):
-		import uuid
 		cache = LocalCache("output/LocalCacheTest.db")
 		key = "test-" + str(uuid.uuid4())
 		class mock:
@@ -25,8 +26,6 @@ class AssistantUnitTests(unittest.TestCase):
 		self.assertEqual(myMock.wasCalled, False)
 
 	def test_getOrAddWithLifetime(self):
-		import time
-		import uuid
 		cache = LocalCache("output/LocalCacheTest.db")
 		key = "test-" + str(uuid.uuid4())
 		value = cache.get_or_add_with_lifetime(key, lambda: "1", 0.5)
