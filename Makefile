@@ -15,9 +15,11 @@ test-all: venv
 	. .venv/bin/activate
 	.venv/bin/python -m unittest discover -s easai_tests -p *tests.py
 
-package: test-all
+build: venv
 	. .venv/bin/activate
 	.venv/bin/python -m build
+
+package: test-all build
 
 upload: venv
 	. .venv/bin/activate

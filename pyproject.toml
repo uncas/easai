@@ -1,10 +1,10 @@
 [build-system]
-requires = ["hatchling"]
+requires = ["hatchling", "hatch-vcs"]
 build-backend = "hatchling.build"
 
 [project]
 name = "easai"
-version = "0.0.9"
+dynamic = ["version"]
 authors = [
   { name="Ole Lynge Sørensen", email="olelynge@gmail.com" },
 ]
@@ -20,3 +20,6 @@ classifiers = [
 [project.urls]
 Homepage = "https://github.com/uncas/easai"
 Issues = "https://github.com/uncas/easai/issues"
+
+[tool.hatch.version]
+source = "vcs"
