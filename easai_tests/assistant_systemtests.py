@@ -1,10 +1,10 @@
 import unittest
 
-from easai.assistant.loop import AssistantLoop, get_user_prompt, run_assistant_loop
+from easai.assistant.assistant import Assistant, get_user_prompt, run_assistant
 from easai.assistant.tool import AssistantTool, AssistantToolParameter
 
 class AssistantSystemTests(unittest.TestCase):
-	def test_run_tool_loop(self):
+	def test_run_assistant(self):
 		from dotenv import load_dotenv
 		load_dotenv(override = True)
 		messages = [get_user_prompt("How is the weather in Italy?")]
@@ -23,19 +23,19 @@ class AssistantSystemTests(unittest.TestCase):
 				])
 		]
 		
-		result = run_assistant_loop(
-			assistant_loop = AssistantLoop(tools = tools),
+		result = run_assistant(
+			assistant = Assistant(tools = tools),
 			messages = messages,
 			tool_message_callback = assert_tool_call)
 		
 		self.assertIn("sunny", result[-1].content)
 		self.assertTrue(self.tool_called)
 
-	def test_run_tool_loop_without_tools(self):
+	def test_run_assistant_without_tools(self):
 		from dotenv import load_dotenv
 		load_dotenv(override = True)
 		messages = [get_user_prompt("Explain the sun")]
 		
-		result = run_assistant_loop(messages = messages)
+		result = run_assistant(messages = messages)
 		
 		self.assertIn("sun", str.lower(result[-1].content))
