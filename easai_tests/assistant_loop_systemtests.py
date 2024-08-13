@@ -3,7 +3,7 @@ import unittest
 from easai.assistant.loop import AssistantLoop, get_user_prompt, run_assistant_loop
 from easai.assistant.tool import AssistantTool, AssistantToolParameter
 
-class AssistantUnitTests(unittest.TestCase):
+class AssistantSystemTests(unittest.TestCase):
 	def test_run_tool_loop(self):
 		from dotenv import load_dotenv
 		load_dotenv(override = True)
