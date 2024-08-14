@@ -32,9 +32,12 @@ class AssistantTool:
 			"function": {
 				"name": self.name,
 				"description": self.description,
+				"strict": True,
 				"parameters": {
 					"type": "object",
-					"properties": properties
+					"properties": properties,
+					"required": list(properties.keys()),
+					"additionalProperties": False
 				}
 			}
 		}

@@ -1,5 +1,5 @@
 # for lib (easai folder):
-openai
+openai >= 1.40.6
 
 # for tests (easai_tests folder):
 python-dotenv
