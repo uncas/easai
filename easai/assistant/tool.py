@@ -1,13 +1,24 @@
 from typing import Callable
 
 class AssistantToolParameter:
-	def __init__(self, name: str, description: str, type: str = "string", enum: list[str] = None):
+	def __init__(self, name: str, description: str = None, type: str = "string", enum: list[str] = None, value = None):
+		"""
+			Args:
+				name (str): The name of the parameter
+				description (str): The description of the parameter
+				type (str, optional): The type of the parameter. Defaults to "string".
+				enum (list[str], optional): The enum of the parameter. Defaults to None.
+				value (any, optional): The value of the parameter. Defaults to None. If value is specified, type, description, and enum are ignored. See specification here: https://platform.openai.com/docs/guides/function-calling
+	    """
 		self.name = name
 		self.description = description
 		self.type = type
 		self.enum = enum
-	
+		self.value = value
+  
 	def get_open_ai_tool_properties(self) -> dict:
+		if self.value:
+			return self.value
 		value = {
 			"type": self.type,
 			"description": self.description
