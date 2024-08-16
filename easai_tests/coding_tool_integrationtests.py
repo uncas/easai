@@ -24,6 +24,18 @@ class CodingToolIntegrationTests(unittest.TestCase):
 		self.assertEqual(result["return_code"], 0)
 		self.assertEqual(result["error"], "")
 
+	def test_delete_file(self):
+		coding_tool = CodingTool(self.test_folder, approve_execution = False)
+		coding_tool.save_code([
+			{"folder_path": "", "file_name": "test.py", "code": ""},
+			{"folder_path": "", "file_name": "test2.py", "code": ""}
+		])
+		self.assertEqual(coding_tool.list_files(), ["test.py", "test2.py"])
+		
+		coding_tool.delete_files(["test2.py"])
+		
+		self.assertEqual(coding_tool.list_files(), ["test.py"])
+
 	def test_list_files_ignore(self):
 		coding_tool = CodingTool(self.test_folder)
 		coding_tool.save_code([

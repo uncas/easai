@@ -22,11 +22,13 @@ class CodingTool:
 	def list_files(self) -> list[str]:
 		all_files = list(Path(self.root_path).rglob("*"))
 
-		gitignore = []
+		gitignore = [".git/*"]
 		gitignore_path = os.path.join(self.root_path, ".gitignore")
 		if os.path.isfile(gitignore_path):
 			with open(gitignore_path) as gitignore_file:
-				gitignore = [line for line in gitignore_file.read().splitlines() if line]
+				for line in gitignore_file.read().splitlines():
+					if line:
+						gitignore.append(line)
 		files = (file for file in all_files	if not ignore_file(str(file.relative_to(self.root_path)), gitignore))
 		return [str(path.relative_to(self.root_path)) for path in files if path.is_file()]
 
@@ -52,6 +54,14 @@ class CodingTool:
 			"error": result.stderr.decode("utf-8"), 
 			"return_code": result.returncode
 		}
+	
+	def delete_files(self, files: list[str]):
+		if self.approve_execution:
+			confirmation = input(f"Are you sure you want to delete the files '{files}' in '{self.root_path}'? (y/n) ")
+			if confirmation.lower() != "y":
+				return
+		for file in files:
+			os.remove(os.path.join(self.root_path, file))
 
 	def save_code_tool(self) -> AssistantTool:
 		parameter_value = {
@@ -75,8 +85,8 @@ class CodingTool:
 	def list_files_tool(self) -> AssistantTool:
 		return AssistantTool(self.list_files, "List all files in the code base")
 
-	def read_code_tool(self) -> AssistantTool:
-		parameter = AssistantToolParameter(
+	def get_files_parameter(self) -> AssistantToolParameter:
+		return AssistantToolParameter(
 			name = "files", 
 			value = {
 				"type": "array",
@@ -85,7 +95,12 @@ class CodingTool:
 				}
 			}
 		)
-		return AssistantTool(self.read_code, "Read code", parameters = [parameter])
+
+	def read_code_tool(self) -> AssistantTool:
+		return AssistantTool(self.read_code, "Read code", parameters = [self.get_files_parameter()])
+
+	def delete_files_tool(self) -> AssistantTool:
+		return AssistantTool(self.delete_files, "Delete files", parameters = [self.get_files_parameter()])
 
 	def run_code_tool(self) -> AssistantTool:
 		return AssistantTool(self.run_code, "Run code", [
@@ -97,5 +112,6 @@ class CodingTool:
 			self.save_code_tool(),
 			self.list_files_tool(),
 			self.read_code_tool(),
-			self.run_code_tool()
+			self.run_code_tool(),
+			self.delete_files_tool()
 		]
