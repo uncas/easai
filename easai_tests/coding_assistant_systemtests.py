@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 from easai.assistant.assistant import Assistant, get_user_prompt, run_assistant
 from easai.assistant.tools.coding_tool import CodingTool
 
-class CodingToolSystemTests(unittest.TestCase):
+class CodingAssistantSystemTests(unittest.TestCase):
 	def setUp(self):
 		load_dotenv(override = True)
 		self.test_folder = "output/coding_tool_system_test"
