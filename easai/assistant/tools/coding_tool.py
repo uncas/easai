@@ -3,7 +3,7 @@ import subprocess
 from pathlib import Path
 
 from easai.assistant.tool import AssistantTool, AssistantToolParameter
-from easai.utils.file_utils import write_text
+from easai.utils.file_utils import ignore_file, write_text
 
 class CodingTool:
 	def __init__(self, root_path: str, name: str = "Coding Tool", approve_execution: bool = True):
@@ -20,8 +20,15 @@ class CodingTool:
 			write_text(full_folder_path, file_name, code)
 
 	def list_files(self) -> list[str]:
-		result = list(Path(self.root_path).rglob("*"))
-		return [str(path.relative_to(self.root_path)) for path in result if path.is_file()]
+		all_files = list(Path(self.root_path).rglob("*"))
+
+		gitignore = []
+		gitignore_path = os.path.join(self.root_path, ".gitignore")
+		if os.path.isfile(gitignore_path):
+			with open(gitignore_path) as gitignore_file:
+				gitignore = [line for line in gitignore_file.read().splitlines() if line]
+		files = (file for file in all_files	if not ignore_file(str(file.relative_to(self.root_path)), gitignore))
+		return [str(path.relative_to(self.root_path)) for path in files if path.is_file()]
 
 	def read_code(self, files: list[str]) -> list[dict[str, str]]:
 		codes = []

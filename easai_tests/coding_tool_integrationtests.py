@@ -6,7 +6,7 @@ from easai.assistant.tools.coding_tool import CodingTool
 class CodingToolIntegrationTests(unittest.TestCase):
 	def setUp(self):
 		self.test_folder = "output/coding_tool_test"
-		shutil.rmtree(self.test_folder, ignore_errors=True)
+		shutil.rmtree(self.test_folder, ignore_errors = True)
 
 	def test_coding_tool(self):
 		coding_tool = CodingTool(self.test_folder, approve_execution = False)
@@ -23,3 +23,15 @@ class CodingToolIntegrationTests(unittest.TestCase):
 		self.assertEqual(result["output"], "testing 2\n")
 		self.assertEqual(result["return_code"], 0)
 		self.assertEqual(result["error"], "")
+
+	def test_list_files_ignore(self):
+		coding_tool = CodingTool(self.test_folder)
+		coding_tool.save_code([
+			{"folder_path": "", "file_name": ".gitignore", "code": "output/*"},
+			{"folder_path": "", "file_name": "test.py", "code": "print('testing')"},
+			{"folder_path": "output", "file_name": "output.txt", "code": "lorem ipsum"}
+		])
+
+		files = coding_tool.list_files()
+
+		self.assertCountEqual(files, [".gitignore", "test.py"])
