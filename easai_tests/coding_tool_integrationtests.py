@@ -1,15 +1,15 @@
 import unittest
+import shutil
 
 from easai.assistant.tools.coding_tool import CodingTool
 
 class CodingToolIntegrationTests(unittest.TestCase):
 	def setUp(self):
 		self.test_folder = "output/coding_tool_test"
-		import shutil
 		shutil.rmtree(self.test_folder, ignore_errors=True)
 
 	def test_coding_tool(self):
-		coding_tool = CodingTool(self.test_folder)
+		coding_tool = CodingTool(self.test_folder, approve_execution = False)
 		coding_tool.save_code([
 			{"folder_path": "", "file_name": "test.py", "code": "print('testing 1')"},
 			{"folder_path": "", "file_name": "test2.py", "code": "print('testing 2')"},

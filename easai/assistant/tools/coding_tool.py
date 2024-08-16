@@ -6,7 +6,7 @@ from easai.assistant.tool import AssistantTool, AssistantToolParameter
 from easai.utils.file_utils import write_text
 
 class CodingTool:
-	def __init__(self, root_path: str, name: str = "Coding Tool", approve_execution: bool = False):
+	def __init__(self, root_path: str, name: str = "Coding Tool", approve_execution: bool = True):
 		self.root_path = root_path
 		self.name = name
 		self.approve_execution = approve_execution
@@ -55,7 +55,9 @@ class CodingTool:
 					"folder_path": { "type": "string" },
 					"file_name": { "type": "string" },
 					"code": { "type": "string" }
-				}
+				},
+				"additionalProperties": False,
+				"required": ["folder_path", "file_name", "code"]
 			}
 		}
 		
@@ -70,7 +72,10 @@ class CodingTool:
 		parameter = AssistantToolParameter(
 			name = "files", 
 			value = {
-				"type": "array"
+				"type": "array",
+				"items": {
+					"type": "string"
+				}
 			}
 		)
 		return AssistantTool(self.read_code, "Read code", parameters = [parameter])
@@ -79,3 +84,11 @@ class CodingTool:
 		return AssistantTool(self.run_code, "Run code", [
 			AssistantToolParameter("command_line", "The command-line command that runs the code")
 		])
+
+	def get_all_tools(self) -> list[AssistantTool]:
+		return [
+			self.save_code_tool(),
+			self.list_files_tool(),
+			self.read_code_tool(),
+			self.run_code_tool()
+		]
