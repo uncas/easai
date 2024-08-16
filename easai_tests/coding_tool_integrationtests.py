@@ -47,3 +47,12 @@ class CodingToolIntegrationTests(unittest.TestCase):
 		files = coding_tool.list_files()
 
 		self.assertCountEqual(files, [".gitignore", "test.py"])
+	
+	def test_list_files_self(self):
+		coding_tool = CodingTool("")
+
+		files = coding_tool.list_files()
+
+		self.assertLess(len(files), 100)
+		#for file in files:
+		#	print(file)

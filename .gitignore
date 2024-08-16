@@ -1,5 +1,5 @@
-/.venv/
-/dist/
-/output/
+.venv/*
+dist/*
+output/*
 .env
-__pycache__/
+*.pyc
