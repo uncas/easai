@@ -1,5 +1,5 @@
 import unittest
 
-from easai_tests.assistant_systemtests import AssistantSystemTests
+from easai_tests.coding_tool_integrationtests import CodingToolIntegrationTests
 
 unittest.main()
